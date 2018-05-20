@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  InfiniteFlickr
 //
-//  Created by Julio Estrada on 3/31/18.
+//  Created by Julio Estrada on 5/15/18.
 //  Copyright © 2018 Julio Estrada. All rights reserved.
 //
 //
@@ -21,5 +21,6 @@ extension Photo {
     @NSManaged public var photoID: String?
     @NSManaged public var remoteURL: NSURL?
     @NSManaged public var title: String?
+    @NSManaged public var isFavorited: Bool
 
 }

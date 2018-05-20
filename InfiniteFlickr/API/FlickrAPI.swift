@@ -60,7 +60,8 @@ struct FlickrAPI {
         return flickrURL(method: .search,
                          parameters: [
                             "text": searchText,
-                            "extras": "url_h,date_taken"
+                            "extras": "url_h,date_taken",
+                            "per_page": "10"
             ])
     }
 
@@ -72,12 +73,18 @@ struct FlickrAPI {
             let photosArray = photos["photo"] as? [[String:Any]] else {
                 return .failure(FlickrError.invalidJSONData)
             }
+            
+            print("photosArray:", photosArray)
             var finalPhotos = [Photo]()
+            
             for photoJSON in photosArray {
                 if let photo = photo(fromJSON: photoJSON, into: context) {
                     finalPhotos.append(photo)
                 }
             }
+            
+            print("Final Photos:", finalPhotos)
+            
             if finalPhotos.isEmpty && !photosArray.isEmpty {
                 return .failure(FlickrError.invalidJSONData)
             }

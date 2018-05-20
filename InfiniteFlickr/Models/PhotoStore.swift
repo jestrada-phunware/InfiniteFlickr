@@ -24,6 +24,8 @@ enum PhotosResult {
 }
 
 class PhotoStore {
+    
+    // MARK: - Properties
     let imageStore = ImageStore()
     let persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "InfiniteFlickr")
@@ -40,27 +42,6 @@ class PhotoStore {
     }()
 
     // MARK: - Functions
-    /*
-    func fetchInterestingPhotos(completion: @escaping (PhotosResult) -> ()) {
-        let url = FlickrAPI.interestingPhotosURL
-        let request = URLRequest(url: url)
-        let task = session.dataTask(with: request) {
-            (data, response, error) in
-            var result = self.processPhotosRequest(data: data, error: error)
-            if case .success = result {
-                do {
-                    try self.persistentContainer.viewContext.save()
-                } catch let error {
-                    result = .failure(error)
-                }
-            }
-            OperationQueue.main.addOperation {
-                completion(result)
-            }
-        }
-        task.resume()
-    } */
-
     func searchFlickr(with searchText: String, completion: @escaping (PhotosResult) -> ()) {
         let url = FlickrAPI.searchURL(searchText)
         let request = URLRequest(url: url)
@@ -146,5 +127,4 @@ class PhotoStore {
         }
     }
 }
-
 
