@@ -17,28 +17,13 @@ class PhotosController: UIViewController {
     let photoDataSource = PhotoDataSource()
     let cellId = "photoCell"
 
-    var photoCell: PhotoCell?
-    var buttonActive = false
-
-
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupViews()
-//        self.updateDataSource()
-        photoCell?.favoriteButton.addTarget(self, action: #selector(didTapFavorite(_:)), for: .touchUpInside)
-    }
-
-    @objc func didTapFavorite(_ sender: UIButton) {
-        // FIX THIS
-        if buttonActive {
-            sender.setImage(#imageLiteral(resourceName: "heart_active"), for: .normal)
-        }
-        else {
-            sender.setImage(#imageLiteral(resourceName: "placeholder"), for: .normal)
-        }
-        buttonActive = !buttonActive
+        self.updateDataSource()
+        
     }
 
     // MARK: - Functions
@@ -65,13 +50,14 @@ class PhotosController: UIViewController {
     private func setupNavBar() {
         navigationItem.title = "InfiniFlickr"
         navigationController?.navigationBar.prefersLargeTitles = true
-//        let favoritesBarButtonItem = UIBarButtonItem.init(image: #imageLiteral(resourceName: "heart_active"), style: .done, target: self, action: #selector(showFavorites(_:)))
-        let rightBarButtonItem = UIBarButtonItem(title: "Favorites", style: .done, target: self, action: #selector(showFavorites(_:)))
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+        let favoritesBarButtonItem = UIBarButtonItem.init(image: #imageLiteral(resourceName: "heart_active"), style: .done, target: self, action: #selector(showFavorites(_:)))
+        
+        navigationItem.rightBarButtonItem = favoritesBarButtonItem
     }
 
     @objc func showFavorites(_ sender: UIBarButtonItem) {
-        present(FavoritesController(), animated: true, completion: nil)
+        let favController = UINavigationController(rootViewController: FavoritesController())
+        present(favController, animated: true, completion: nil)
     }
 
     private func setupSearchController() {
@@ -120,8 +106,16 @@ extension PhotosController: UISearchBarDelegate {
 
 extension PhotosController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //        let padding: CGFloat = 50
+        //        let collectionViewSize = collectionView.frame.size.width - padding
+        //        return CGSize(width: collectionViewSize/2, height: collectionViewSize/2)
+        return CGSize(width: view.bounds.width, height: 250)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        
         if let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first {
             let photo = photoDataSource.photos[selectedIndexPath.row]
             let destinationVC = PhotoDetailController()
@@ -129,13 +123,6 @@ extension PhotosController: UICollectionViewDelegate, UICollectionViewDelegateFl
             destinationVC.store = store
             navigationController?.show(destinationVC, sender: cell)
         }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let padding: CGFloat = 50
-//        let collectionViewSize = collectionView.frame.size.width - padding
-//        return CGSize(width: collectionViewSize/2, height: collectionViewSize/2)
-        return CGSize(width: view.bounds.width, height: 250)
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -153,23 +140,7 @@ extension PhotosController: UICollectionViewDelegate, UICollectionViewDelegateFl
         }
     }
 
-    // Start trying to implement infinite scroll
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        if offsetY > contentHeight - scrollView.frame.size.height {
-            self.collectionView.reloadData()
-        }
-    }
+    // TODO: - Implement infinite scroll
+    
 }
-
-
-
-
-
-
-
-
-
-
 

@@ -9,7 +9,7 @@
 import UIKit
 
 class PhotoCell: UICollectionViewCell {
-
+    
     // MARK: - Properties
     var favoriteButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -65,7 +65,12 @@ class PhotoCell: UICollectionViewCell {
     func setupFavoriteButton() {
         addSubview(favoriteButton)
         favoriteButton.anchor(top: self.topAnchor, leading: nil, bottom: nil, trailing: self.trailingAnchor, padding: .init(top: 16, left: 0, bottom: 0, right: 16), size: .init(width: 60, height: 60))
-//        favoriteButton.addTarget(self, action: #selector(didTapFavorite(_:)), for: .touchUpInside)
+        favoriteButton.addTarget(self, action: #selector(didTapFavorite(_:)), for: .touchUpInside)
+    }
+    
+    @objc func didTapFavorite(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        sender.setImage(#imageLiteral(resourceName: "heart_active"), for: .selected)
     }
 
     // MARK: - Functions
@@ -79,11 +84,6 @@ class PhotoCell: UICollectionViewCell {
             photoImageView.image = nil
         }
     }
-//
-//    @objc func didTapFavorite(_ sender: UIButton) {
-//        sender.isSelected = !sender.isSelected
-//        print("sender:", sender.isSelected)
-//    }
 }
 
 
