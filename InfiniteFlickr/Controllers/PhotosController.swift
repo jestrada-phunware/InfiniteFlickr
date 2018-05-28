@@ -15,15 +15,12 @@ class PhotosController: UIViewController {
     var searchController: UISearchController!
     var store: PhotoStore!
     let photoDataSource = PhotoDataSource()
-    let cellId = "photoCell"
 
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupViews()
-        self.updateDataSource()
-        
     }
 
     // MARK: - Functions
@@ -32,10 +29,15 @@ class PhotosController: UIViewController {
             switch photosResult {
             case let .success(photos):
                 self.photoDataSource.photos = photos
+                print("successfull photosResult")
             case .failure:
                 self.photoDataSource.photos.removeAll()
+                print("failed photosResult")
             }
-            self.collectionView.reloadSections(IndexSet(integer: 0))
+
+            DispatchQueue.main.async {
+                self.collectionView.reloadSections(IndexSet(integer: 0))
+            }
         }
     }
 
@@ -56,8 +58,7 @@ class PhotosController: UIViewController {
     }
 
     @objc func showFavorites(_ sender: UIBarButtonItem) {
-        let favController = UINavigationController(rootViewController: FavoritesController())
-        present(favController, animated: true, completion: nil)
+        self.navigationController?.pushViewController(FavoritesController(), animated: true)
     }
 
     private func setupSearchController() {
@@ -86,7 +87,7 @@ class PhotosController: UIViewController {
         collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.defaultIdentifier)
     }
 }
 
@@ -99,6 +100,20 @@ extension PhotosController: UISearchBarDelegate {
             case .failure:
                 self.photoDataSource.photos.removeAll()
             }
+            DispatchQueue.main.async {
+                self.collectionView.reloadSections(IndexSet(integer: 0))
+            }
+        }
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.endEditing(true)
+
+        self.photoDataSource.photos.removeAll()
+        
+        DispatchQueue.main.async {
             self.collectionView.reloadSections(IndexSet(integer: 0))
         }
     }
@@ -107,14 +122,12 @@ extension PhotosController: UISearchBarDelegate {
 extension PhotosController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        //        let padding: CGFloat = 50
-        //        let collectionViewSize = collectionView.frame.size.width - padding
-        //        return CGSize(width: collectionViewSize/2, height: collectionViewSize/2)
         return CGSize(width: view.bounds.width, height: 250)
     }
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.defaultIdentifier, for: indexPath) as? PhotoCell
         
         if let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first {
             let photo = photoDataSource.photos[selectedIndexPath.row]
@@ -141,6 +154,5 @@ extension PhotosController: UICollectionViewDelegate, UICollectionViewDelegateFl
     }
 
     // TODO: - Implement infinite scroll
-    
 }
 

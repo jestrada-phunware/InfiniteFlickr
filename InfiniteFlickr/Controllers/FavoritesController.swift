@@ -9,10 +9,14 @@
 import UIKit
 
 class FavoritesController: UITableViewController {
-    
+
+    // TODO: - Implement favoriting functionality and display favorited photos here
+
+    // MARK: - Properties
     var photos = [Photo]()
     var cellId = "cell"
-    
+
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -28,7 +32,6 @@ class FavoritesController: UITableViewController {
     }
     
     @objc private func dismissFavorites(_ sender: UIViewController) {
-//        navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
     

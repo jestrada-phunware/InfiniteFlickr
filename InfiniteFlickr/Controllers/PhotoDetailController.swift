@@ -19,7 +19,7 @@ class PhotoDetailController: UIViewController {
     }
     var store: PhotoStore!
 
-    // MARK: - View life cycle
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -33,7 +33,6 @@ class PhotoDetailController: UIViewController {
                 print("Error fetching image for photo: \(error)")
             }
         }
-
     }
 
     // MARK: - Setup Views

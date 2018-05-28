@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  InfiniteFlickr
 //
-//  Created by Julio Estrada on 5/15/18.
+//  Created by Julio Estrada on 5/28/18.
 //  Copyright © 2018 Julio Estrada. All rights reserved.
 //
 //
@@ -17,10 +17,9 @@ extension Photo {
         return NSFetchRequest<Photo>(entityName: "Photo")
     }
 
-    @NSManaged public var dateTaken: NSDate?
-    @NSManaged public var photoID: String?
-    @NSManaged public var remoteURL: NSURL?
-    @NSManaged public var title: String?
     @NSManaged public var isFavorited: Bool
+    @NSManaged public var photoID: String?
+    @NSManaged public var title: String?
+    @NSManaged public var remoteURL: NSObject?
 
 }

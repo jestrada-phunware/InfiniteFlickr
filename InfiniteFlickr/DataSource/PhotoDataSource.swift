@@ -11,14 +11,13 @@ import UIKit
 class PhotoDataSource: NSObject, UICollectionViewDataSource {
 
     var photos = [Photo]()
-    let cellReuseIdentifier = "photoCell"
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.defaultIdentifier, for: indexPath) as! PhotoCell
         return cell
     }
 }

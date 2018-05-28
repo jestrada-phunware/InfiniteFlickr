@@ -71,8 +71,10 @@ class PhotoStore {
     }
 
     func fetchImage(for photo: Photo, completion: @escaping (ImageResult) -> ()) {
-        guard let photoKey = photo.photoID else {
-            preconditionFailure("Photo expected to have a photoID.")
+        
+        guard let photoKey = photo.photoID,
+        let photoURL = photo.remoteURL else {
+            return 
         }
 
         if let image = imageStore.image(forKey: photoKey) {
@@ -82,11 +84,7 @@ class PhotoStore {
             return
         }
 
-        guard let photoURL = photo.remoteURL else {
-            preconditionFailure("Photo expected to have a remoteURL")
-        }
-
-        let request = URLRequest(url: photoURL as URL)
+        let request = URLRequest(url: photoURL as! URL)
         let task = session.dataTask(with: request) { (data, response, error) in
             let result = self.processImageRequest(data: data, error: error)
             if case let .success(image) = result {
@@ -112,9 +110,10 @@ class PhotoStore {
 
     func fetchAllPhotos(completion: @escaping (PhotosResult) -> ()) {
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-        let sortByDateTaken = NSSortDescriptor(key: #keyPath(Photo.dateTaken), ascending: true)
+        // TODO: - Fix this, figure out how you want to sort photos
 
-        fetchRequest.sortDescriptors = [sortByDateTaken]
+//        let sortByDateTaken = NSSortDescriptor(key: #keyPath(Photo.dateTaken), ascending: true)
+//        fetchRequest.sortDescriptors = [sortByDateTaken]
 
         let viewContext = persistentContainer.viewContext
         viewContext.perform {

@@ -13,7 +13,6 @@ enum FlickrError: Error {
 }
 
 enum Method: String {
-    case interestingPhotos = "flickr.interestingness.getList"
     case search = "flickr.photos.search"
 }
 
@@ -52,16 +51,13 @@ struct FlickrAPI {
         return components.url!
     }
 
-//    static var interestingPhotosURL: URL {
-//        return flickrURL(method: .interestingPhotos, parameters: ["extras": "url_h,date_taken"])
-//    }
-
     static func searchURL(_ searchText: String) -> URL {
         return flickrURL(method: .search,
                          parameters: [
                             "text": searchText,
-                            "extras": "url_h,date_taken",
-                            "per_page": "10"
+                            "extras": "url_h",
+                            "per_page": "10",
+                            "safe_search": "1"
             ])
     }
 
@@ -73,8 +69,7 @@ struct FlickrAPI {
             let photosArray = photos["photo"] as? [[String:Any]] else {
                 return .failure(FlickrError.invalidJSONData)
             }
-            
-            print("photosArray:", photosArray)
+
             var finalPhotos = [Photo]()
             
             for photoJSON in photosArray {
@@ -82,8 +77,6 @@ struct FlickrAPI {
                     finalPhotos.append(photo)
                 }
             }
-            
-            print("Final Photos:", finalPhotos)
             
             if finalPhotos.isEmpty && !photosArray.isEmpty {
                 return .failure(FlickrError.invalidJSONData)
@@ -97,11 +90,9 @@ struct FlickrAPI {
 
     static func photo(fromJSON json: [String : Any], into context: NSManagedObjectContext) -> Photo? {
         guard let photoID = json["id"] as? String,
-        let title = json["title"] as? String,
-        let dateString = json["datetaken"] as? String,
         let photoURLString = json["url_h"] as? String,
         let url = URL(string: photoURLString),
-            let dateTaken = dateFormatter.date(from: dateString) else {
+        let title = json["title"] as? String else {
                 return nil
         }
 
@@ -123,7 +114,6 @@ struct FlickrAPI {
             photo.title = title
             photo.photoID = photoID
             photo.remoteURL = url as NSURL
-            photo.dateTaken = dateTaken as NSDate
         }
 
         return photo

@@ -11,15 +11,16 @@ import UIKit
 class PhotoCell: UICollectionViewCell {
     
     // MARK: - Properties
-    var favoriteButton: UIButton = {
+    static let defaultIdentifier: String = "PhotoCell"
+    private var favoriteButton: UIButton = {
         let button = UIButton(type: .custom)
         var image = #imageLiteral(resourceName: "heart")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    var photoImageView: UIImageView!
-    var spinner: UIActivityIndicatorView!
+    private var photoImageView: UIImageView!
+    private var spinner: UIActivityIndicatorView!
 
     // MARK: - Setup
     override init(frame: CGRect) {
@@ -51,7 +52,8 @@ class PhotoCell: UICollectionViewCell {
 
     func setupImageView() {
         photoImageView = UIImageView(image: #imageLiteral(resourceName: "placeholder"))
-        photoImageView.sizeToFit()
+        photoImageView.backgroundColor = .white
+        photoImageView.contentMode = .scaleAspectFill
         addSubview(photoImageView)
         photoImageView.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: self.trailingAnchor)
     }

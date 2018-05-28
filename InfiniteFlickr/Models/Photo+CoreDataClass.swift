@@ -2,7 +2,7 @@
 //  Photo+CoreDataClass.swift
 //  InfiniteFlickr
 //
-//  Created by Julio Estrada on 5/15/18.
+//  Created by Julio Estrada on 5/28/18.
 //  Copyright © 2018 Julio Estrada. All rights reserved.
 //
 //
